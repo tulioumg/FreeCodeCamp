@@ -7,6 +7,7 @@ const runner = require('./test-runner');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -21,8 +22,9 @@ app.get('/hello', function (req, res) {
 
 const travellers = function (req, res) {
   let data = {};
-  if (req.body && req.body.surname) {
-    switch (req.body.surname.toLowerCase()) {
+  const surname = req.body && req.body.surname;
+  if (surname) {
+    switch (surname.toLowerCase()) {
       case 'polo':
         data = {
           name: 'Marco',
@@ -58,12 +60,42 @@ const travellers = function (req, res) {
         }
     }
   }
-  res.json(data);
+  
+  // Si es una petición POST (formulario HTML), responder con HTML
+  if (req.method === 'POST') {
+    const html = `<!DOCTYPE html>
+<html>
+  <head>
+    <title>Famous Italian Explorers</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Famous Italian Explorers</h1>
+
+    <form method="post" action="/travellers" id="f1">
+      <label for="surname">Surname:</label>
+      <input type="text" name="surname" id="i1" />
+      <button type="submit">submit</button>
+    </form>
+
+    <div id="tn">
+      <h2>Explorer Info</h2>
+      <p>Name: <span id="name">${data.name || ''}</span></p>
+      <p>Surname: <span id="surname">${data.surname || ''}</span></p>
+    </div>
+  </body>
+</html>`;
+    res.send(html);
+  } else {
+    // Para peticiones PUT (AJAX), responder con JSON
+    res.json(data);
+  }
 };
 
 
 app.route('/travellers')
-  .put(travellers);
+  .put(travellers)
+  .post(travellers);
 
 let error;
 app.get('/_api/get-tests', cors(), function (req, res, next) {
@@ -82,19 +114,23 @@ app.get('/_api/get-tests', cors(), function (req, res, next) {
   });
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3004;
 app.listen(port, function () {
   console.log("Listening on port " + port);
-  console.log('Running Tests...');
-  setTimeout(function () {
-    try {
-      runner.run();
-    } catch (e) {
-      error = e;
-      console.log('Tests are not valid:');
-      console.log(error);
-    }
-  }, 1500);
+  
+  // Solo ejecutar tests en desarrollo, no en producción
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Running Tests...');
+    setTimeout(function () {
+      try {
+        runner.run();
+      } catch (e) {
+        error = e;
+        console.log('Tests are not valid:');
+        console.log(error);
+      }
+    }, 1500);
+  }
 });
 
 
