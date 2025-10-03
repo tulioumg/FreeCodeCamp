@@ -118,19 +118,21 @@ const port = process.env.PORT || 3004;
 app.listen(port, function () {
   console.log("Listening on port " + port);
   
-  // Solo ejecutar tests en desarrollo, no en producción
+  // Siempre ejecutar tests (necesario para FreeCodeCamp API)
   if (process.env.NODE_ENV !== 'production') {
     console.log('Running Tests...');
-    setTimeout(function () {
-      try {
-        runner.run();
-      } catch (e) {
-        error = e;
+  }
+  setTimeout(function () {
+    try {
+      runner.run();
+    } catch (e) {
+      error = e;
+      if (process.env.NODE_ENV !== 'production') {
         console.log('Tests are not valid:');
         console.log(error);
       }
-    }, 1500);
-  }
+    }
+  }, 1500);
 });
 
 
