@@ -7,8 +7,8 @@ suite('Unit Tests', function () {
     test('#isNull, #isNotNull', function () {
       // Use assert.isNull() or assert.isNotNull() to make the tests pass. 
       // isNull and isNotNull also take a string as the second parameter so you can have a custom error message.
-      assert.fail(null, 'This is an optional error description - e.g. null is null');
-      assert.fail(1, '1 is not null');
+      assert.isNull(null, 'This is an optional error description - e.g. null is null');
+      assert.isNotNull(1, '1 is not null');
     });
     // #2
     test('#isDefined, #isUndefined', function () {
