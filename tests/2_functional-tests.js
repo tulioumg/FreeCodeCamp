@@ -90,25 +90,13 @@ suite('Functional Tests with Zombie.js', function () {
       browser.visit('/', function (err) {
         if (err) return done(err);
         
-        browser.fill('surname', 'Colombo');
-        browser.pressButton('submit', function (err) {
-          if (err) return done(err);
-          
-          // Esperar a que el DOM se actualice con el resultado del AJAX
-          browser.wait(function() {
-            return browser.text('span#name') !== '';
-          }, function(err) {
-            if (err) return done(err);
-            
-            try {
-              browser.assert.success();
-              browser.assert.text('span#name', 'Cristoforo');
-              browser.assert.text('span#surname', 'Colombo');
-              browser.assert.elements('span#dates', 1);
-              done();
-            } catch (error) {
-              done(error);
-            }
+        browser.fill('surname', 'Colombo').then(() => {
+          browser.pressButton('submit', () => {
+            browser.assert.success();
+            browser.assert.text('span#name', 'Cristoforo');
+            browser.assert.text('span#surname', 'Colombo');
+            browser.assert.elements('span#dates', 1);
+            done();
           });
         });
       });

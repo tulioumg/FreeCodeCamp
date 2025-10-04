@@ -58,21 +58,22 @@
         const surname = document.getElementById('i1').value;
         if (!surname) return;
         
-        // Usar XMLHttpRequest en lugar de fetch para mejor compatibilidad con Zombie.js
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', '/travellers', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            const data = JSON.parse(xhr.responseText);
-            document.getElementById('name').textContent = data.name || '';
-            document.getElementById('surname').textContent = data.surname || '';
-            document.getElementById('dates').textContent = data.dates || '';
-          }
-        };
-        
-        xhr.send(JSON.stringify({ surname: surname }));
+        fetch('/travellers', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ surname: surname })
+        })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('name').textContent = data.name || '';
+          document.getElementById('surname').textContent = data.surname || '';
+          document.getElementById('dates').textContent = data.dates || '';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
       });
     </script>
   </body>
