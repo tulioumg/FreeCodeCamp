@@ -89,12 +89,17 @@ suite('Functional Tests with Zombie.js', function () {
     test('Submit the surname "Colombo" in the HTML form', function (done) {
       browser.visit('/', function (err) {
         if (err) return done(err);
-        browser.fill('#i1', 'Colombo');
-        browser.pressButton('button[type="submit"]', function (err) {
+        
+        browser.fill('surname', 'Colombo');
+        browser.pressButton('submit', function (err) {
           if (err) return done(err);
           
-          // Dar tiempo para que el AJAX se complete
-          setTimeout(() => {
+          // Esperar a que el DOM se actualice con el resultado del AJAX
+          browser.wait(function() {
+            return browser.text('span#name') !== '';
+          }, function(err) {
+            if (err) return done(err);
+            
             try {
               browser.assert.success();
               browser.assert.text('span#name', 'Cristoforo');
@@ -104,7 +109,7 @@ suite('Functional Tests with Zombie.js', function () {
             } catch (error) {
               done(error);
             }
-          }, 100);
+          });
         });
       });
     });
