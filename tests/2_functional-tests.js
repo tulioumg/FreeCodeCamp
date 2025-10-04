@@ -85,26 +85,29 @@ suite('Functional Tests with Zombie.js', function () {
   });
 
   suite('"Famous Italian Explorers" form', function () {
+    // Load the page before running form tests
+    before(function(done) {
+      browser.visit('/', done);
+    });
+    
     // #5
     test('Submit the surname "Colombo" in the HTML form', function (done) {
-      browser.visit('/', function (err) {
-        if (err) return done(err);
-        
-        browser.fill('surname', 'Colombo').then(() => {
-          browser.pressButton('submit', () => {
-            setTimeout(() => {
-              try {
-                browser.assert.success();
-                browser.assert.text('span#name', 'Cristoforo');
-                browser.assert.text('span#surname', 'Colombo');
-                browser.assert.elements('span#dates', 1);
-                done();
-              } catch (error) {
-                done(error);
-              }
-            }, 300);
-          });
-        });
+      browser.fill('surname', 'Colombo');
+      browser.pressButton('submit', function() {
+        // pressButton is Async. Waits for the ajax call to complete...
+        // But we need a small delay to ensure AJAX completes
+        setTimeout(() => {
+          // assert that status is OK 200
+          browser.assert.success();
+          // assert that the text inside the element 'span#name' is 'Cristoforo'
+          browser.assert.text('span#name', 'Cristoforo');
+          // assert that the text inside the element 'span#surname' is 'Colombo'
+          browser.assert.text('span#surname', 'Colombo');
+          // assert that the element(s) 'span#dates' exist and their count is 1
+          browser.assert.element('span#dates', 1);
+          
+          done(); // It's an async test, so we have to call 'done()'
+        }, 200);
       });
     });
     // #6
