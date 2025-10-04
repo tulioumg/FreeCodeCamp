@@ -5,6 +5,8 @@ const myDB = require('./connection');
 const fccTesting = require('./freeCodeCamp/fcctesting.js');
 const session = require('express-session');
 const passport = require('passport');
+const routes = require('./routes.js');
+const auth = require('./auth.js');
 
 const app = express();
 
@@ -27,17 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 
 myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
-  
-  app.route('/').get((req, res) => {
-    res.render('index', {
-      title: 'Connected to Database',
-      message: 'Please login',
-      showLogin: true,
-      showRegistration: true,
-      showSocialAuth: true
-    });
-  });
-
+  routes(app, myDataBase);
+  auth(app, myDataBase);
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('index', { title: e, message: 'Unable to connect to database' });
