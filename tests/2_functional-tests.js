@@ -95,7 +95,7 @@ suite('Functional Tests with Zombie.js', function () {
           /** YOUR TESTS HERE, Don't forget to remove assert.fail() **/
 
           // pressButton is Async.  Waits for the ajax call to complete...
-          // Adding small delay to ensure AJAX completes
+          // Adding longer delay to ensure AJAX completes and DOM updates
           setTimeout(() => {
             // assert that status is OK 200
             browser.assert.success();
@@ -104,10 +104,10 @@ suite('Functional Tests with Zombie.js', function () {
             // assert that the text inside the element 'span#surname' is 'Colombo'
             browser.assert.text('span#surname', 'Colombo');
             // assert that the element(s) 'span#dates' exist and their count is 1
-            browser.assert.element('span#dates', 1);
+            browser.assert.elements('span#dates', 1);
 
             done(); // It's an async test, so we have to call 'done()''
-          }, 100);
+          }, 500);
         });
       });
     });
