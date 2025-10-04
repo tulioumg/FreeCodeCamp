@@ -89,9 +89,9 @@ suite('Functional Tests with Zombie.js', function () {
     test('Submit the surname "Colombo" in the HTML form', function (done) {
       browser.visit('/', function() {
         // fill the form...
-        browser.fill('surname', 'Colombo');
+        browser.fill('#i1', 'Colombo');
         // then submit it pressing 'submit' button.
-        browser.pressButton('submit', function() {
+        browser.pressButton('button[type="submit"]', function() {
           /** YOUR TESTS HERE, Don't forget to remove assert.fail() **/
 
           // pressButton is Async.  Waits for the ajax call to complete...
