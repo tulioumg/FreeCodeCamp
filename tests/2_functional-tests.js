@@ -92,10 +92,19 @@ suite('Functional Tests with Zombie.js', function () {
         browser.fill('#i1', 'Colombo');
         browser.pressButton('button[type="submit"]', function (err) {
           if (err) return done(err);
-          browser.assert.success();
-          browser.assert.text('span#name', 'Cristoforo');
-          browser.assert.text('span#surname', 'Colombo');
-          done();
+          
+          // Dar tiempo para que el AJAX se complete
+          setTimeout(() => {
+            try {
+              browser.assert.success();
+              browser.assert.text('span#name', 'Cristoforo');
+              browser.assert.text('span#surname', 'Colombo');
+              browser.assert.elements('span#dates', 1);
+              done();
+            } catch (error) {
+              done(error);
+            }
+          }, 100);
         });
       });
     });
@@ -106,10 +115,18 @@ suite('Functional Tests with Zombie.js', function () {
         browser.fill('#i1', 'Vespucci');
         browser.pressButton('button[type="submit"]', function (err) {
           if (err) return done(err);
-          browser.assert.success();
-          browser.assert.text('span#name', 'Amerigo');
-          browser.assert.text('span#surname', 'Vespucci');
-          done();
+          
+          // Dar tiempo para que el AJAX se complete
+          setTimeout(() => {
+            try {
+              browser.assert.success();
+              browser.assert.text('span#name', 'Amerigo');
+              browser.assert.text('span#surname', 'Vespucci');
+              done();
+            } catch (error) {
+              done(error);
+            }
+          }, 100);
         });
       });
     });

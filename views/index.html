@@ -3,6 +3,37 @@
   <head>
     <title>Famous Italian Explorers</title>
     <meta charset="utf-8" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      form {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      input {
+        padding: 5px;
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 5px 10px;
+        background-color: #007cba;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      #tn {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
     <h1>Famous Italian Explorers</h1>
@@ -17,6 +48,33 @@
       <h2>Explorer Info</h2>
       <p>Name: <span id="name"></span></p>
       <p>Surname: <span id="surname"></span></p>
+      <p>Dates: <span id="dates"></span></p>
     </div>
+
+    <script>
+      document.getElementById('f1').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const surname = document.getElementById('i1').value;
+        if (!surname) return;
+        
+        fetch('/travellers', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ surname: surname })
+        })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('name').textContent = data.name || '';
+          document.getElementById('surname').textContent = data.surname || '';
+          document.getElementById('dates').textContent = data.dates || '';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+    </script>
   </body>
 </html>
