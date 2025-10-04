@@ -43,8 +43,8 @@ function Utils() {
           contentType = "application/json";
         } else {
           query = [];
-          for (let key in params) {
-            query.push(key + '=' + encodeURIComponent(params[key]));
+          for (let key in options.data) {
+            query.push(key + '=' + encodeURIComponent(options.data[key]));
             query.push('&');
           }
           query.pop();
