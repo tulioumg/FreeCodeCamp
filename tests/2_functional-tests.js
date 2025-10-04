@@ -1,3 +1,4 @@
+const { suite, test } = require('mocha');
 const chai = require('chai');
 const assert = chai.assert;
 

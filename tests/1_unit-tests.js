@@ -1,3 +1,4 @@
+const { suite, test } = require('mocha');
 const chai = require('chai');
 const assert = chai.assert;
 
@@ -68,7 +69,7 @@ suite('Unit Tests', function () {
     // #9
     test('#isBelow, #isAtLeast', function () {
       assert.isAtLeast('world'.length, 5);
-      assert.isAbove(2 * Math.random(), 0);
+      assert.isAtLeast(2 * Math.random(), 0);
       assert.isBelow(5 % 2, 2);
       assert.isBelow(2 / 3, 1);
     });
