@@ -68,7 +68,7 @@ suite('Functional Tests', function () {
 });
 
 const Browser = require('zombie');
-Browser.site = 'http://127.0.0.1:3004'; // Usar IP específica en lugar de localhost
+Browser.site = 'https://freecodecamp-nih54.onrender.com/'; // URL del deployment para freeCodeCamp
 const browser = new Browser({
   silent: true,
   waitDuration: '30s',
@@ -85,29 +85,30 @@ suite('Functional Tests with Zombie.js', function () {
   });
 
   suite('"Famous Italian Explorers" form', function () {
-    // Load the page before running form tests
-    before(function(done) {
-      browser.visit('/', done);
-    });
-    
     // #5
     test('Submit the surname "Colombo" in the HTML form', function (done) {
-      browser.fill('surname', 'Colombo');
-      browser.pressButton('submit', function() {
-        // pressButton is Async. Waits for the ajax call to complete...
-        // But we need a small delay to ensure AJAX completes
-        setTimeout(() => {
-          // assert that status is OK 200
-          browser.assert.success();
-          // assert that the text inside the element 'span#name' is 'Cristoforo'
-          browser.assert.text('span#name', 'Cristoforo');
-          // assert that the text inside the element 'span#surname' is 'Colombo'
-          browser.assert.text('span#surname', 'Colombo');
-          // assert that the element(s) 'span#dates' exist and their count is 1
-          browser.assert.elements('span#dates', 1);
-          
-          done(); // It's an async test, so we have to call 'done()'
-        }, 200);
+      browser.visit('/', function() {
+        // fill the form...
+        browser.fill('surname', 'Colombo');
+        // then submit it pressing 'submit' button.
+        browser.pressButton('submit', function() {
+          /** YOUR TESTS HERE, Don't forget to remove assert.fail() **/
+
+          // pressButton is Async.  Waits for the ajax call to complete...
+          // Adding small delay to ensure AJAX completes
+          setTimeout(() => {
+            // assert that status is OK 200
+            browser.assert.success();
+            // assert that the text inside the element 'span#name' is 'Cristoforo'
+            browser.assert.text('span#name', 'Cristoforo');
+            // assert that the text inside the element 'span#surname' is 'Colombo'
+            browser.assert.text('span#surname', 'Colombo');
+            // assert that the element(s) 'span#dates' exist and their count is 1
+            browser.assert.element('span#dates', 1);
+
+            done(); // It's an async test, so we have to call 'done()''
+          }, 100);
+        });
       });
     });
     // #6
