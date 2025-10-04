@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Set up template engine
 app.set('view engine', 'pug');
-app.set('views', './views/pug');
+app.set('views', process.cwd() + '/views/pug');
 
 app.route('/').get((req, res) => {
   res.render('index', {
